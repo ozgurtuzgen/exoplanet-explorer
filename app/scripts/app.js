@@ -38,12 +38,13 @@ Instructions:
     // url (required), options (optional)
     return fetch(url, {
       method: 'get'
-    }).then(function (response) {
-      console.log('status: ', response.status);
-      return response;
-    }).catch(function (err) {
-      console.log(Error(err));      
     });
+    // .then(function (response) {
+    //   console.log('status: ', response.status);
+    //   return response;
+    // }).catch(function (err) {
+    //   console.log(Error(err));      
+    // });
   }
 
   /**
@@ -58,11 +59,11 @@ Instructions:
     Your code goes here!
      */
     return new Promise(function (resolve, reject) {
-
       get(url).then(function (response) {        
+        if (!response.ok){
+          reject('Network Error');  
+        }
         resolve(response.json());
-      }).catch(function () {
-        reject('error');
       })
     });
 
@@ -77,7 +78,7 @@ Instructions:
     Your code goes here too!
      */
     getJSON('../data/earth-like-results.json').then(function (response) {
-      addSearchHeader(response.results);      
+      addSearchHeader(response.query);      
     })
     .catch(function (error) {
       console.log(Error(error));
