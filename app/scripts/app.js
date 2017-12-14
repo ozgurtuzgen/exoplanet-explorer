@@ -69,11 +69,13 @@ Instructions:
         addSearchHeader(response.query);
         return getJSON(response.results[0]);
       })
-      .then(function (planetData) {
-        createPlanetThumb(planetData);
+      .catch(function (error) {
+        throw Error('search error');
       })
+      .then(createPlanetThumb)
       .catch(function (err) {
-        console.log(Error(err));
+        console.log(err);
+        addSearchHeader('unknown');
       });
   });
 })(document);
