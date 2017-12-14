@@ -67,10 +67,10 @@ Instructions:
     getJSON('../data/earth-like-results.json')
       .then(function (response) {
         addSearchHeader(response.query);
-        return response.results;
+        return getJSON(response.results[0]);
       })
-      .then(function (results) {
-        return createPlanetThumb(results[0]);
+      .then(function (planetData) {
+        createPlanetThumb(planetData);
       })
       .catch(function (err) {
         console.log(Error(err));
