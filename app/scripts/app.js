@@ -10,7 +10,7 @@ Instructions:
 // Inline configuration for jshint below. Prevents `gulp jshint` from failing with quiz starter code.
 /* jshint unused: false */
 
-(function(document) {
+(function (document) {
   'use strict';
 
   var home = null;
@@ -35,6 +35,15 @@ Instructions:
 
     Your code goes here!
      */
+    // url (required), options (optional)
+    return fetch(url, {
+      method: 'get'
+    }).then(function (response) {
+      console.log('status: ', response.status);
+      return response;
+    }).catch(function (err) {
+      console.log(Error(err));      
+    });
   }
 
   /**
@@ -48,9 +57,18 @@ Instructions:
 
     Your code goes here!
      */
+    return new Promise(function (resolve, reject) {
+
+      get(url).then(function (response) {        
+        resolve(response.json());
+      }).catch(function () {
+        reject('error');
+      })
+    });
+
   }
 
-  window.addEventListener('WebComponentsReady', function() {
+  window.addEventListener('WebComponentsReady', function () {
     home = document.querySelector('section[data-route="home"]');
     /*
     Uncomment the next line when you're ready to test!
@@ -58,6 +76,12 @@ Instructions:
 
     Your code goes here too!
      */
-    // getJSON('../data/earth-like-results.json')
+    getJSON('../data/earth-like-results.json').then(function (response) {
+      addSearchHeader(response.results);      
+    })
+    .catch(function (error) {
+      console.log(Error(error));
+      addSearchHeader('unknown');
+    });
   });
 })(document);
