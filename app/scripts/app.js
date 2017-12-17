@@ -65,6 +65,9 @@ Hint: you'll probably still need to use .map.
       })
       .then(function (results) {
         results.map(createPlanetThumb);
+      })
+      .catch(function (err) {
+        console.log(err);
       });
   });
 })(document);
