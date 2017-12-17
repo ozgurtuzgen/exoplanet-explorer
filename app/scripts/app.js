@@ -10,7 +10,7 @@ Instructions:
 // Inline configuration for jshint below. Prevents `gulp jshint` from failing with quiz starter code.
 /* jshint unused: false */
 
-(function(document) {
+(function (document) {
   'use strict';
 
   var home = null;
@@ -52,21 +52,91 @@ Instructions:
    * @return {Promise}    - A promise that passes the parsed JSON response.
    */
   function getJSON(url) {
-    return get(url).then(function(response) {
+    return get(url).then(function (response) {
       return response.json();
     });
   }
 
-  window.addEventListener('WebComponentsReady', function() {
+  window.addEventListener('WebComponentsReady', function () {
     home = document.querySelector('section[data-route="home"]');
     /*
     Refactor this code!
      */
     getJSON('../data/earth-like-results.json')
-    .then(function(response) {
-      response.results.forEach(function(url) {
-        getJSON(url).then(createPlanetThumb);
+      .then(function (response) {
+
+        var sequence = Promise.resolve();
+
+        response.results.forEach(function (url) {
+          sequence = sequence.then(function () {
+            return getJSON(url);
+          })
+            .then(function (data) {
+              createPlanetThumb(data);
+            });
+        });
       });
-    });
+
+      // Parallel Execution !!!
+      // getJSON('../data/earth-like-results.json')
+      // .then(function (response) {
+
+      //   var sequence = Promise.resolve();
+
+      //   response.results.forEach(function (url) {
+      //     sequence.then(function () {
+      //       return getJSON(url);
+      //     })
+      //       .then(function (data) {
+      //         createPlanetThumb(data);
+      //       });
+      //   });
+      // });
   });
 })(document);
+
+
+        //----------------------------------
+
+        // bad way of sequencing!!!
+        // var index = 0;
+        // getJSON(response.results[index]).then(function (data) {
+        //   createPlanetThumb(data);
+        //   index = index + 1;
+        //   getJSON(response.results[index]).then(function (data) {
+        //     createPlanetThumb(data);
+        //     index = index + 1;
+        //     getJSON(response.results[index]).then(function (data) {
+        //       createPlanetThumb(data);
+        //       index = index + 1;
+        //       getJSON(response.results[index]).then(function (data) {
+        //         createPlanetThumb(data);
+        //         index = index + 1;
+        //         getJSON(response.results[index]).then(function (data) {
+        //           createPlanetThumb(data);
+        //           index = index + 1;
+        //         });    
+        //       });    
+        //     });    
+        //   });
+        // });
+
+        //------------------------------
+
+        // parallel execution!!!
+        // var promises = [];
+        // for (let index = 0; index < response.results.length; index++) {
+        //   const element = response.results[index];
+        //   promises.push(getJSON(element));
+        // }
+        // Promise.all(promises).then((results)=>{
+        //   for (let newIndex = 0; newIndex < results.length; newIndex++) {
+        //     const element = results[newIndex];
+        //     createPlanetThumb(element);            
+        //   }          
+        // })
+        // .catch((err) => {
+        //   console.log(Error(err));
+        //   createPlanetThumb('unknown');
+        // });
+
