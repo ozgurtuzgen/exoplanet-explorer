@@ -139,4 +139,3 @@ Instructions:
         //   console.log(Error(err));
         //   createPlanetThumb('unknown');
         // });
-
